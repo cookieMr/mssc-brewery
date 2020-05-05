@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,7 +32,7 @@ public class BeerController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Void> saveBeer(BeerDTO beerDto) {
+	public ResponseEntity<Void> saveBeer(@RequestBody BeerDTO beerDto) {
 		BeerDTO savedDto = beerService.saveBeer(beerDto);
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -42,7 +43,7 @@ public class BeerController {
 	}
 	
 	@PutMapping({"/{beerId}"})
-	public ResponseEntity<Void> updateBeer(@PathVariable("beerId") UUID beerId, BeerDTO beerDto) {
+	public ResponseEntity<Void> updateBeer(@PathVariable("beerId") UUID beerId, @RequestBody BeerDTO beerDto) {
 		beerService.updateBeer(beerId, beerDto);
 		
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
