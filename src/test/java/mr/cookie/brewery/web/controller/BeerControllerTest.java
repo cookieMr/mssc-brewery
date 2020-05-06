@@ -31,7 +31,8 @@ import mr.cookie.brewery.web.model.BeerDTO;
 @WebMvcTest(controllers = BeerController.class)
 public class BeerControllerTest {
 
-	private static final ObjectMapper mapper = new ObjectMapper();
+	private static final String BEER_URL = "/api/v1/beer/";
+	private static final ObjectMapper MAPPER = new ObjectMapper();
 	
     @Autowired
     private MockMvc mockMvc;
@@ -45,7 +46,7 @@ public class BeerControllerTest {
     	
         when(beerService.getBeerById(any(UUID.class))).thenReturn(validBeer);
 
-        mockMvc.perform(get("/api/v1/beer/" + validBeer.getId().toString())
+        mockMvc.perform(get(BEER_URL + validBeer.getId().toString())
         		.accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -68,9 +69,9 @@ public class BeerControllerTest {
         
         when(beerService.saveBeer(any(BeerDTO.class))).thenReturn(savedDto);
 
-        mockMvc.perform(post("/api/v1/beer/")
+        mockMvc.perform(post(BEER_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(beerDto)))
+                .content(MAPPER.writeValueAsString(beerDto)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$").doesNotExist());
 
@@ -83,9 +84,9 @@ public class BeerControllerTest {
     public void updateBeer() throws Exception {
     	BeerDTO beerDto = getValidBeer();
 
-        mockMvc.perform(put("/api/v1/beer/" + beerDto.getId())
+        mockMvc.perform(put(BEER_URL + beerDto.getId())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(beerDto)))
+                .content(MAPPER.writeValueAsString(beerDto)))
                 .andExpect(status().isNoContent())
                 .andExpect(jsonPath("$").doesNotExist());
 
@@ -97,7 +98,7 @@ public class BeerControllerTest {
     public void deleteBeer() throws Exception {
     	UUID uuid = UUID.randomUUID();
 
-        mockMvc.perform(delete("/api/v1/beer/" + uuid.toString()))
+        mockMvc.perform(delete(BEER_URL + uuid.toString()))
                 .andExpect(status().isNoContent())
                 .andExpect(jsonPath("$").doesNotExist());
 
@@ -106,7 +107,8 @@ public class BeerControllerTest {
     }
     
     private BeerDTO getValidBeer() {
-        return BeerDTO.builder().id(UUID.randomUUID())
+        return BeerDTO.builder()
+        		.id(UUID.randomUUID())
                 .name("Beer1")
                 .style("PALE_ALE")
                 .upc(123456789012L)
