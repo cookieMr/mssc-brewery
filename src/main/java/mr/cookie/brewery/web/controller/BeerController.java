@@ -1,6 +1,8 @@
 package mr.cookie.brewery.web.controller;
 
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -40,7 +42,7 @@ public class BeerController {
 		
 		HttpHeaders headers = new HttpHeaders();
         //TODO add hostname to url
-        headers.add("Location", URL + savedDto.getId().toString());
+        headers.add("Location", Stream.of(URL, savedDto.getId().toString()).collect(Collectors.joining("/")));
         
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
 	}
