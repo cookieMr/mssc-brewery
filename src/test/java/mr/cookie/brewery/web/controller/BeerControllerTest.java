@@ -2,6 +2,7 @@ package mr.cookie.brewery.web.controller;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -50,12 +51,12 @@ public class BeerControllerTest {
                 .andExpect(jsonPath("$.id", is(validBeer.getId().toString())))
                 .andExpect(jsonPath("$.name", is("Beer1")));
 
-        verify(beerService).getBeerById(any(UUID.class));
+        verify(beerService).getBeerById(eq(validBeer.getId()));
         verifyNoMoreInteractions(beerService);
     }
 
     @Test
-    public void handlePost() throws Exception {
+    public void saveBeer() throws Exception {
     	BeerDTO beerDto = getValidBeer();
         beerDto.setId(null);
         
@@ -69,23 +70,25 @@ public class BeerControllerTest {
         mockMvc.perform(post("/api/v1/beer/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(beerDto)))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$").doesNotExist());
 
-        verify(beerService).saveBeer(any(BeerDTO.class));
+        verify(beerService).saveBeer(eq(beerDto));
         verifyNoMoreInteractions(beerService);
 
     }
     
     @Test
-    public void handleUpdate() throws Exception {
+    public void updateBeer() throws Exception {
     	BeerDTO beerDto = getValidBeer();
 
         mockMvc.perform(put("/api/v1/beer/" + beerDto.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(beerDto)))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isNoContent())
+                .andExpect(jsonPath("$").doesNotExist());
 
-        verify(beerService).updateBeer(any(UUID.class), any(BeerDTO.class));
+        verify(beerService).updateBeer(eq(beerDto.getId()), eq(beerDto));
         verifyNoMoreInteractions(beerService);
     }
     
