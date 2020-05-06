@@ -6,6 +6,7 @@ import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -89,6 +90,18 @@ public class BeerControllerTest {
                 .andExpect(jsonPath("$").doesNotExist());
 
         verify(beerService).updateBeer(eq(beerDto.getId()), eq(beerDto));
+        verifyNoMoreInteractions(beerService);
+    }
+
+    @Test
+    public void deleteBeer() throws Exception {
+    	UUID uuid = UUID.randomUUID();
+
+        mockMvc.perform(delete("/api/v1/beer/" + uuid.toString()))
+                .andExpect(status().isNoContent())
+                .andExpect(jsonPath("$").doesNotExist());
+
+        verify(beerService).deleteBeer(eq(uuid));
         verifyNoMoreInteractions(beerService);
     }
     
