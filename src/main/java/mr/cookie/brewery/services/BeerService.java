@@ -6,12 +6,12 @@ import mr.cookie.brewery.web.model.BeerDTO;
 
 public interface BeerService {
 
-	public BeerDTO getBeerById(UUID beerId);
+	BeerDTO getBeerById(UUID beerId);
 
-	public BeerDTO saveBeer(BeerDTO beerDto);
+	BeerDTO saveBeer(BeerDTO beerDto);
 
 	void updateBeer(UUID beerId, BeerDTO beerDto);
 
-	public void deleteBeer(UUID beerId);
+	void deleteBeer(UUID beerId);
 	
 }

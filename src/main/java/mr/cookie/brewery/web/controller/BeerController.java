@@ -1,6 +1,8 @@
 package mr.cookie.brewery.web.controller;
 
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -18,10 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 import mr.cookie.brewery.services.BeerService;
 import mr.cookie.brewery.web.model.BeerDTO;
 
-@RequestMapping("/api/v1/beer")
+@RequestMapping(BeerController.URL)
 @RestController
 public class BeerController {
 
+	public static final String URL = "/api/v1/beer";
 	private final BeerService beerService;
 	
 	public BeerController(BeerService beerService) {
@@ -39,7 +42,7 @@ public class BeerController {
 		
 		HttpHeaders headers = new HttpHeaders();
         //TODO add hostname to url
-        headers.add("Location", "/api/v1/beer/" + savedDto.getId().toString());
+        headers.add("Location", Stream.of(URL, savedDto.getId().toString()).collect(Collectors.joining("/")));
         
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
 	}
